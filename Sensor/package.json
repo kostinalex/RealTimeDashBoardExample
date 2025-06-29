@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "clear && go run main.go",
+    "deploy": "clear && docker build . -t kostinalex/jule_sensor && docker push kostinalex/jule_sensor && ssh -i ~/.ssh/hetzner_new root@kostinalex.com \"cd /etc/nginx && docker pull kostinalex/jule_sensor && docker compose -f /etc/nginx/jule.yml up -d sensor1 && docker compose -f /etc/nginx/jule.yml up -d sensor2 && docker image prune -af\""
+  }
+}

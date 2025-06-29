@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "clear && export HOST=localhost&& export PORT=52017&& air -c .air.toml",
+    "deploy": "clear && docker build . -t kostinalex/jule_api && docker push kostinalex/jule_api && ssh -i ~/.ssh/hetzner_new root@kostinalex.com \"cd /etc/nginx && docker pull kostinalex/jule_api && docker compose -f /etc/nginx/jule.yml up -d api && docker image prune -af\""
+  }
+}

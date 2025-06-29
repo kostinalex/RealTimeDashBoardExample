@@ -1,0 +1,84 @@
+version: "3.8"
+
+services:
+  postgresqldb:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: alex
+      POSTGRES_PASSWORD: KKzj5NP6CkvvuMqTClIL
+      POSTGRES_DB: testdb
+    ports:
+      - "52017:5432"
+    volumes:
+      - /home/ubuntu/test/postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: GLWceF5TTXbw5x8mbL7M
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgresqldb
+    volumes:
+      - /home/ubuntu/test/pgadmin_data:/var/lib/pgadmin
+
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: jule_api
+    restart: unless-stopped
+    depends_on:
+      - postgresqldb
+    ports:
+      - "52016:8080"
+    environment:
+      HOST: postgresqldb
+      PORT: 5432
+
+  front:
+    build:
+      context: ./Front
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: "http://localhost:52016"
+    container_name: jule_front
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "52018:80"
+
+  sensor1:
+    build:
+      context: ./Sensor
+      dockerfile: Dockerfile
+    container_name: jule_sensor1
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      URL: http://jule_api:8080
+      SENSOR_ID: abc1
+
+  sensor2:
+    build:
+      context: ./Sensor
+      dockerfile: Dockerfile
+    container_name: jule_sensor2
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      URL: http://jule_api:8080
+      SENSOR_ID: abc2
+
+volumes:
+  postgres_data:
+  pgadmin_data:

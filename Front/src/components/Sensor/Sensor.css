@@ -1,0 +1,14 @@
+.chartWraper {
+  width: 100%;
+  min-height: 330px;
+  border: 2px solid #dadada;
+  border-radius: 10px;
+  position: relative;
+  padding: 20px 15px 0px 0px;
+}
+
+.controlsWraper {
+  margin: 150px 0px 10px 0px;
+  display: flex;
+  justify-content: center;
+}
